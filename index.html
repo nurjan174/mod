@@ -12,3 +12,23 @@
   <div id="board"></div>
   <script src="script.js"></script>
 </body>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.expand(); // Расширить на весь экран
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const profile = document.createElement("div");
+    profile.style.marginTop = "10px";
+
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+      profile.innerHTML = 
+        <img src="${user.photo_url}" width="50" style="border-radius: 50%; vertical-align: middle;" />
+        <span style="font-size: 16px; margin-left: 10px;">${user.first_name}</span>
+      ;
+    }
+
+    document.body.insertBefore(profile, document.getElementById("board"));
+  });
+</script>
