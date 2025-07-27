@@ -6,3 +6,46 @@
   <title>Календарь цикла</title>
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Календарь цикла</h1>
+      <div class="buttons">
+        <button class="button button-primary" onclick="openPeriodModal()">Отметить месячные</button>
+        <button class="button button-secondary" onclick="openSymptomModal()">Добавить симптомы</button>
+      </div>
+    </div>
+    <div id="calendar"></div>
+  </div>
+
+  <div id="periodModal" class="modal">
+    <div class="modal-content">
+      <h2>Отметить месячные</h2>
+      <input type="date" id="periodDate" required>
+      <button class="button button-primary" onclick="markPeriod()">Сохранить</button>
+      <button class="button button-secondary" onclick="closeModal('periodModal')">Отмена</button>
+    </div>
+  </div>
+
+  <div id="symptomModal" class="modal">
+    <div class="modal-content">
+      <h2>Добавить симптом</h2>
+      <select id="symptomType" required>
+        <option value="">Выберите симптом</option>
+        <option value="Боль">Боль</option>
+        <option value="Настроение">Настроение</option>
+        <option value="Выделения">Выделения</option>
+      </select>
+      <input type="date" id="symptomDate" required>
+      <button class="button button-primary" onclick="markSymptom()">Сохранить</button>
+      <button class="button button-secondary" onclick="closeModal('symptomModal')">Отмена</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js"></script>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
