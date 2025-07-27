@@ -43,3 +43,7 @@ body {
 .blue {
   background: blue;
 }
+@media (max-width: 500px) {
+  .board { width: 320px; grid-template-columns: repeat(8, 40px); }
+  .cell { width: 40px; height: 40px; }
+}
