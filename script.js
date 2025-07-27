@@ -1,71 +1,61 @@
-const board = document.getElementById("board");
+let currentDate = new Date();
+const calendarEl = document.getElementById('calendar');
+const monthEl = document.getElementById('month');
 
-function createBoard() {
-  for (let row = 0; row < 8; row++) {
-    for (let col = 0; col < 8; col++) {
-      const cell = document.createElement("div");
-      cell.classList.add("cell");
+const tg = window.Telegram.WebApp;
+tg.ready();
+const user = tg.initDataUnsafe?.user;
+document.getElementById("username").textContent = Привет, ${user?.first_name || "гость"}!;
 
-      if ((row + col) % 2 === 0) {
-        cell.classList.add("white");
+function renderCalendar() {
+  calendarEl.innerHTML = "";
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDate = new Date(year, month + 1, 0).getDate();
+
+  monthEl.textContent = currentDate.toLocaleDateString('ru-RU', {
+    month: 'long', year: 'numeric'
+  });
+
+  // Пустые ячейки до первого дня недели
+  for (let i = 0; i < (firstDay === 0 ? 6 : firstDay - 1); i++) {
+    const empty = document.createElement("div");
+    calendarEl.appendChild(empty);
+  }
+
+  for (let day = 1; day <= lastDate; day++) {
+    const dayEl = document.createElement("div");
+    dayEl.classList.add("day");
+    dayEl.textContent = day;
+
+    const key = ${year}-${month}-${day};
+    if (localStorage.getItem(key)) {
+      dayEl.classList.add("selected");
+    }
+
+    dayEl.addEventListener("click", () => {
+      if (dayEl.classList.contains("selected")) {
+        dayEl.classList.remove("selected");
+        localStorage.removeItem(key);
       } else {
-        cell.classList.add("black");
-
-        if (row < 3) {
-          const piece = document.createElement("div");
-          piece.classList.add("piece", "red");
-          cell.appendChild(piece);
-        } else if (row > 4) {
-          const piece = document.createElement("div");
-          piece.classList.add("piece", "blue");
-          cell.appendChild(piece);
-        }
+        dayEl.classList.add("selected");
+        localStorage.setItem(key, "1");
       }
+    });
 
-      board.appendChild(cell);
-    }
+    calendarEl.appendChild(dayEl);
   }
 }
 
-createBoard();
-const params = new URLSearchParams(window.location.search);
-const room = params.get("room");
-
-if (!room) {
-  const inviteCode = Math.random().toString(36).substring(2, 8);
-  const inviteUrl = ${location.origin}${location.pathname}?room=${inviteCode};
-  alert("Скопируй ссылку и отправь другу: " + inviteUrl);
-}function botMove() {
-  const jumps = [];
-  const moves = [];
-
-  for (let y = 0; y < 8; y++) {
-    for (let x = 0; x < 8; x++) {
-      if (state[y][x] === 'red') {
-        for (let dx of [-1, 1]) {
-          let nx = x + dx;
-          let ny = y + 1;
-          if (isValidMove(x, y, nx, ny)) {
-            moves.push({ from: [x, y], to: [nx, ny] });
-          }
-          // check jump
-          let jx = x + dx * 2;
-          let jy = y + 2;
-          if (isValidMove(x, y, jx, jy)) {
-            jumps.push({ from: [x, y], to: [jx, jy] });
-          }
-        }
-      }
-    }
-  }
-
-  const move = jumps.length > 0
-    ? jumps[Math.floor(Math.random() * jumps.length)]
-    : moves[Math.floor(Math.random() * moves.length)];
-
-  if (move) {
-    movePiece(...move.from, ...move.to);
-    turn = 'blue';
-    render();
-  }
+function prevMonth() {
+  currentDate.setMonth(currentDate.getMonth() - 1);
+  renderCalendar();
 }
+
+function nextMonth() {
+  currentDate.setMonth(currentDate.getMonth() + 1);
+  renderCalendar();
+}
+
+renderCalendar();
