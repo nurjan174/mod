@@ -1,49 +1,50 @@
 body {
-  font-family: sans-serif;
-  text-align: center;
-  background: #f2f2f2;
   margin: 0;
-  padding: 0;
+  font-family: sans-serif;
+  background: #f6f0f8;
 }
 
-#board {
+header {
+  padding: 1rem;
+  text-align: center;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.calendar {
   display: grid;
-  grid-template-columns: repeat(8, 50px);
-  grid-template-rows: repeat(8, 50px);
-  margin: 20px auto;
-  width: 400px;
-  border: 2px solid #333;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  padding: 10px;
 }
 
-.cell {
-  width: 50px;
-  height: 50px;
-  box-sizing: border-box;
+.day {
+  padding: 10px;
+  background: #fff;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
 }
 
-.white {
-  background: #eee;
+.day.selected {
+  background: #ff8bb3;
+  color: white;
+  font-weight: bold;
 }
 
-.black {
-  background: #444;
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 10px;
+  margin: 10px 0;
 }
 
-.piece {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin: 5px auto;
-}
-
-.red {
-  background: red;
-}
-
-.blue {
-  background: blue;
-}
-@media (max-width: 500px) {
-  .board { width: 320px; grid-template-columns: repeat(8, 40px); }
-  .cell { width: 40px; height: 40px; }
+button {
+  background: #ff8bb3;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
 }
