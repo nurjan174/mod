@@ -20,7 +20,7 @@ function displayUserProfile() {
 // Пример получения данных о подарках через Telegram API
 async function fetchGifts() {
     try {
-        const response = await fetch('https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUserProfilePhotos', {
+        const response = await fetch('https://api.telegram.org/bot<7042496389:AAFdyDdUoqrwmarqaajjBTEw3Z8M0K0DWk4>/getUserProfilePhotos', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
