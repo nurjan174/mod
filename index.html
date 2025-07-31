@@ -1,28 +1,22 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="profile-pic"></div>
-    <div class="username"></div>
-    <div class="stats">
-        <div class="stat">0 <span class="logo"></span></div>
-        <div class="stat">0 <img src="https://via.placeholder.com/20?text=🎁" alt="gift"></div>
-        <div class="stat">0 <img src="https://via.placeholder.com/20?text=🎁" alt="gift"></div>
-    </div>
-    <div class="profile-btn">
-        <span class="logo"></span>
-    </div>
-    <div class="gift-btn">
-        <span class="gift-counter">0.02</span>
-        <span class="logo">+</span>
-    </div>
-
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+   <!DOCTYPE html>
+   <html>
+   <head>
+     <title>Мой профиль</title>
+     <meta charset="utf-8">
+   </head>
+   <body>
+     <div id="profile"></div>
+     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+     <script>
+       const user = window.Telegram.WebApp.initDataUnsafe.user;
+       if (user) {
+         document.getElementById('profile').innerHTML = `
+           <img src="${user.photo_url || 'default_avatar.png'}" alt="Аватар" width="100"/>
+           <p>Ник: ${user.username || 'Нет имени'}</p>
+           <p>ID: ${user.id}</p>
+         `;
+       }
+     </script>
+   </body>
+   </html>
+   
