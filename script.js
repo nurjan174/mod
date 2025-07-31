@@ -1,143 +1,51 @@
-// app.js
-let currentUser = null;
-let userData = {
-    balance: 0,
-    referrals: 0,
-    completedTasks: 0
-};
+const tg = window.Telegram.WebApp;
+tg.ready();
 
-// Telegram Auth callback
-function onTelegramAuth(user) {
-    currentUser = user;
-    localStorage.setItem('telegramUser', JSON.stringify(user));
-    document.getElementById('telegram-login').style.display = 'none';
-    initializeApp();
-}
+// Функция для отображения профиля пользователя
+function displayUserProfile() {
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+        // Установка имени пользователя
+        const usernameElement = document.querySelector('.username');
+        usernameElement.textContent = user.username || User_${user.id};
 
-// Initialize app after authentication
-function initializeApp() {
-    loadUserData();
-    showSection('profile');
-    updateUI();
-}
-
-// Load user data (mock data for demonstration)
-function loadUserData() {
-    // In a real app, this would be an API call
-    userData = {
-        balance: 100,
-        referrals: 5,
-        completedTasks: 3
-    };
-    updateUI();
-}
-
-// Update UI elements
-function updateUI() {
-    document.getElementById('balance').textContent = userData.balance;
-    document.getElementById('referrals').textContent = userData.referrals;
-    document.getElementById('completed-tasks').textContent = userData.completedTasks;
-    
-    if (currentUser) {
-        document.getElementById('username').textContent = currentUser.first_name;
-        document.getElementById('profile-photo').src = currentUser.photo_url || 'default-avatar.png';
+        // Установка фотографии профиля
+        const profilePicElement = document.querySelector('.profile-pic');
+        if (user.photo_url) {
+            profilePicElement.style.backgroundImage = url(${user.photo_url});
+        }
     }
 }
 
-// Show different sections
-function showSection(sectionName) {
-    // Hide all sections
-    document.querySelectorAll('.content-section').forEach(section => {
-        section.classList.add('hidden');
-    });
-    
-    // Show selected section
-    document.getElementById(`${sectionName}-section`).classList.remove('hidden');
-    
-    // Update navigation buttons
-    document.querySelectorAll('.nav-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.querySelector(`[onclick="showSection('${sectionName}')"]`).classList.add('active');
-
-    // Load section content
-    switch(sectionName) {
-        case 'tasks':
-            loadTasks();
-            break;
-        case 'shop':
-            loadShop();
-            break;
+// Пример получения данных о подарках через Telegram API
+async function fetchGifts() {
+    try {
+        const response = await fetch('https://api.telegram.org/bot<YOUR_BOT_TOKEN>/getUserProfilePhotos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                user_id: tg.initDataUnsafe.user.id,
+                limit: 1
+            })
+        });
+        const data = await response.json();
+        if (data.ok) {
+            console.log('Gifts data:', data);
+            const giftCount = data.result.total_count || 0;
+            document.querySelector('.stats .stat:nth-child(2)').textContent = ${giftCount} <img src="https://via.placeholder.com/20?text=🎁" alt="gift">;
+        }
+    } catch (error) {
+        console.error('Error fetching gifts:', error);
     }
 }
 
-// Load tasks
-function loadTasks() {
-    const tasks = [
-        { id: 1, title: "Подпишись на канал", description: "Подпишись и получи награду", reward: 10 },
-        { id: 2, title: "Пригласи друга", description: "Приведи нового пользователя", reward: 5 },
-    ];
+// Вызов функций при загрузке
+displayUserProfile();
+fetchGifts();
 
-    const tasksList = document.getElementById('tasks-list');
-    tasksList.innerHTML = tasks.map(task => `
-        <div class="task-item">
-            <div class="item-info">
-                <h3>${task.title}</h3>
-                <p>${task.description}</p>
-                <p>Награда: ${task.reward} токенов</p>
-            </div>
-            <button class="action-btn" onclick="completeTask(${task.id})">Выполнить</button>
-        </div>
-    `).join('');
-}
-
-// Load shop items
-function loadShop() {
-    const items = [
-        { id: 1, title: "Стикеры", description: "Набор классных стикеров", price: 50 },
-        { id: 2, title: "VIP статус", description: "Особый статус на неделю", price: 100 },
-    ];
-
-    const shopEl = document.getElementById('shop-items');
-    shopEl.innerHTML = items.map(item => `
-        <div class="shop-item">
-            <div class="item-info">
-                <h3>${item.title}</h3>
-                <p>${item.description}</p>
-                <p>Цена: ${item.price} токенов</p>
-            </div>
-            <button class="action-btn" onclick="buyItem(${item.id})">Купить</button>
-        </div>
-    `).join('');
-}
-
-// Complete task handler
-function completeTask(taskId) {
-    // Add API call here
-    userData.balance += 10;
-    userData.completedTasks += 1;
-    updateUI();
-    alert(`Задание ${taskId} выполнено! +10 токенов`);
-}
-
-// Buy item handler
-function buyItem(itemId) {
-    const prices = {1: 50, 2: 100};
-    if (userData.balance >= prices[itemId]) {
-        userData.balance -= prices[itemId];
-        updateUI();
-        alert(`Товар успешно куплен!`);
-    } else {
-        alert('Недостаточно токенов!');
-    }
-}
-
-// Check for existing session
-window.onload = () => {
-    const savedUser = localStorage.getItem('telegramUser');
-    if (savedUser) {
-        currentUser = JSON.parse(savedUser);
-        document.getElementById('telegram-login').style.display = 'none';
-        initializeApp();
-    }
-};
+// Обработчик клика на кнопку подарков
+document.querySelector('.gift-btn').addEventListener('click', () => {
+    tg.openLink('https://t.me/your_bot?start=gift'); // Переход к боту для отправки подарка
+});
