@@ -6,41 +6,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Telegram Game Bot</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <div id="app">
+        <!-- Header with balance -->
+        <div id="header">
+            <div id="balance-container">
+                <i class="fas fa-coins"></i>
+                <span id="balance">0</span>
+            </div>
+        </div>
+
+        <!-- Main content area -->
+        <div id="main-content">
+            <!-- Profile Section -->
+            <div id="profile-section" class="content-section">
+                <div class="profile-info">
+                    <img id="profile-photo" src="default-avatar.png" alt="Profile Photo">
+                    <h2 id="username">Гость</h2>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <span>Рефералы: </span>
+                            <span id="referrals">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="fas fa-tasks"></i>
+                            <span>Выполнено заданий: </span>
+                            <span id="completed-tasks">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tasks Section -->
+            <div id="tasks-section" class="content-section hidden">
+                <h2>Доступные задания</h2>
+                <div id="tasks-list"></div>
+            </div>
+
+            <!-- Shop Section -->
+            <div id="shop-section" class="content-section hidden">
+                <h2>Магазин</h2>
+                <div id="shop-items"></div>
+            </div>
+        </div>
+
+        <!-- Navigation Bar -->
+        <nav id="bottom-nav">
+            <button class="nav-btn" onclick="showSection('profile')">
+                <i class="fas fa-user"></i>
+                <span>Профиль</span>
+            </button>
+            <button class="nav-btn" onclick="showSection('tasks')">
+                <i class="fas fa-tasks"></i>
+                <span>Задания</span>
+            </button>
+            <button class="nav-btn" onclick="showSection('shop')">
+                <i class="fas fa-store"></i>
+                <span>Магазин</span>
+            </button>
+        </nav>
+
         <!-- Telegram Login Widget -->
         <div id="telegram-login">
-            <script async src="https://telegram.org/js/telegram-widget.js?22"MODKA"
-                    data-telegram-login=" 
+            <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                    data-telegram-login="YourBotName" 
                     data-size="large" 
                     data-onauth="onTelegramAuth(user)"
                     data-request-access="write"></script>
-        </div>
-
-        <!-- User Profile -->
-        <div id="profile" class="hidden">
-            <h2>Профиль</h2>
-            <p>Баланс: <span id="balance">0</span> токенов</p>
-            <p>Рефералы: <span id="referrals">0</span></p>
-        </div>
-
-        <!-- Tasks -->
-        <div id="tasks" class="hidden">
-            <h2>Задания</h2>
-            <div id="tasks-list"></div>
-        </div>
-
-        <!-- Top Players -->
-        <div id="leaderboard" class="hidden">
-            <h2>Топ игроков</h2>
-            <div id="top-players"></div>
-        </div>
-
-        <!-- Shop -->
-        <div id="shop" class="hidden">
-            <h2>Магазин</h2>
-            <div id="shop-items"></div>
         </div>
     </div>
 
